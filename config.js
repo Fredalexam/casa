@@ -16,8 +16,8 @@
    no campo correspondente e deixa o outro vazio.
    ------------------------------------------------------------- */
 window.CASA_CONFIG = {
-  SUPABASE_URL: '',              // ex.: https://abcdefghijkl.supabase.co
+  SUPABASE_URL: 'https://ustxidxytguvigtnvqco.supabase.co/rest/v1',              // ex.: https://abcdefghijkl.supabase.co
   SUPABASE_ANON_KEY: '',         // chave legada "anon public"  (eyJ...)
-  SUPABASE_PUBLISHABLE_KEY: '',  // ou chave nova "publishable" (sb_publishable_...)
+  SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_xxxxxxxxxxxx',  // ou chave nova "publishable" (sb_publishable_...)
   DOC_ID: 'casa'                 // identificador do livro de contas partilhado
 };
