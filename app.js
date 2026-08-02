@@ -103,6 +103,13 @@ function saveLocal() {
   try { localStorage.setItem(LS_DATA, JSON.stringify(S.data)); }
   catch (e) { toast('sem espaço para gravar'); }
 }
+function meName() {
+  const em = (S.session && S.session.email || '').toLowerCase();
+  const map = CFG.USERS || {};
+  for (const k in map) if (k.toLowerCase() === em) return map[k];
+  return 'Casa';
+}
+
 function saveSession(s) {
   S.session = s;
   if (s) localStorage.setItem(LS_SESSION, JSON.stringify(s));
@@ -262,7 +269,8 @@ function paintBanner() {
   }
   const map = { ok: ['ok', 'sincronizado ' + S.syncMsg], busy: ['', 'a sincronizar…'], err: ['err', 'falhou: ' + S.syncMsg], off: ['off', 'offline'] };
   const [cls, txt] = map[S.sync] || ['', ''];
-  b.innerHTML = `<div class="syncbar"><span><i class="led ${cls}"></i>${esc(txt)}</span>
+  const me = meName();
+  b.innerHTML = `<div class="syncbar"><span><i class="led ${cls}"></i>${esc(txt)}${me !== 'Casa' ? ' · ' + esc(me) : ''}</span>
     <span><button data-act="sync">atualizar</button> · <button data-act="logout">sair</button></span></div>`;
 }
 
@@ -524,7 +532,7 @@ document.addEventListener('click', async (e) => {
     case 'new':
     case 'new-day': {
       const day = act === 'new-day' ? S.selDay : (S.ym === S.todayYm ? S.todayDay : 1);
-      S.form = { kind: 'out', mode: 'once', amount: '', label: '', cat: CATS.out[0], who: 'Casa', day, ym: S.ym };
+      S.form = { kind: 'out', mode: 'once', amount: '', label: '', cat: CATS.out[0], who: meName(), day, ym: S.ym };
       S.layer = 'form'; paintLayer(); break;
     }
     case 'f-kind': keepForm(); S.form.kind = v; S.form.cat = CATS[v][0]; paintLayer(); break;
@@ -548,11 +556,11 @@ document.addEventListener('click', async (e) => {
     case 'do-login': {
       const em = $('#lEmail').value, pw = $('#lPass').value;
       $('#lErr').textContent = 'a entrar…';
-      try { await login(em, pw); S.layer = null; paint(); toast('ligado'); }
+      try { await login(em, pw); S.layer = null; paint(); startPoll(); toast('ligado'); }
       catch (err) { $('#lErr').textContent = err.message; }
       break;
     }
-    case 'logout': saveSession(null); S.sync = 'off'; paint(); break;
+    case 'logout': saveSession(null); S.sync = 'off'; stopPoll(); paint(); break;
     case 'sync': sync(true); break;
   }
 });
@@ -569,8 +577,21 @@ document.addEventListener('input', (e) => {
   }
 });
 
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sync(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') { sync(); startPoll(); } else stopPoll();
+});
 window.addEventListener('online', () => sync(true));
+
+/* sondagem: enquanto a app estiver à vista, procura alterações do outro telemóvel */
+let poll = null;
+function startPoll() {
+  stopPoll();
+  if (!CLOUD || !S.session) return;
+  poll = setInterval(() => {
+    if (document.visibilityState === 'visible' && S.layer !== 'form') sync();
+  }, 25000);
+}
+function stopPoll() { if (poll) { clearInterval(poll); poll = null; } }
 
 /* =========================================================
    Arranque
@@ -578,7 +599,7 @@ window.addEventListener('online', () => sync(true));
 
 loadLocal();
 paint();
-if (CLOUD && S.session) sync(true);
+if (CLOUD && S.session) { sync(true); startPoll(); }
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

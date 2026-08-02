@@ -1,9 +1,9 @@
 /* Service worker: app shell em cache, rede para o Supabase.
    Muda CACHE quando editares ficheiros, senão o telemóvel serve a versão antiga. */
-const CACHE = 'casa-v2';
+const CACHE = 'casa-v4';
 const SHELL = [
   './', './index.html', './styles.css', './app.js', './config.js',
-  './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'
+  './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (e) => {
