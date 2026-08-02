@@ -18,6 +18,6 @@
 window.CASA_CONFIG = {
   SUPABASE_URL: 'https://ustxidxytguvigtnvqco.supabase.co/rest/v1',              // ex.: https://abcdefghijkl.supabase.co
   SUPABASE_ANON_KEY: '',         // chave legada "anon public"  (eyJ...)
-  SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_xxxxxxxxxxxx',  // ou chave nova "publishable" (sb_publishable_...)
+  SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_TV8lXw6Wa8-ohQ0x8Cal7Q_-_al-6Jy',  // ou chave nova "publishable" (sb_publishable_...)
   DOC_ID: 'casa'                 // identificador do livro de contas partilhado
 };
