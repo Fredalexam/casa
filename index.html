@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E7E8E1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Casa">
+<title>Casa — contas do mês</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+  <div class="wrap">
+
+    <header class="head">
+      <div class="headrow">
+        <button class="nav" data-act="prev" aria-label="Mês anterior">&lsaquo;</button>
+        <div class="monthbox">
+          <div class="month" id="mName">—</div>
+          <div class="year" id="mYear"></div>
+        </div>
+        <button class="nav" data-act="next" aria-label="Mês seguinte">&rsaquo;</button>
+      </div>
+
+      <div class="sum">
+        <div class="sumcard"><span class="lab">Entradas</span><span class="val in" id="sIn">—</span></div>
+        <div class="sumcard"><span class="lab">Saídas</span><span class="val out" id="sOut">—</span></div>
+        <div class="sumcard"><span class="lab">Saldo</span><span class="val" id="sNet">—</span></div>
+      </div>
+
+      <div class="ruler" id="ruler" aria-hidden="true"></div>
+    </header>
+
+    <div id="banner"></div>
+    <main id="view"></main>
+    <div class="spacer"></div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab on" data-act="tab" data-tab="cal">Calendário</button>
+    <button class="fab" data-act="new" aria-label="Adicionar movimento">+</button>
+    <button class="tab" data-act="tab" data-tab="rep">Relatório</button>
+  </nav>
+
+  <div id="layer"></div>
+  <div id="toast" class="toast" hidden></div>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
