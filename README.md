@@ -49,9 +49,26 @@ Sincroniza ao abrir, ao voltar à app, ao recuperar a rede, meio segundo depois 
 
 Sempre que alterares `app.js`, `styles.css` ou `index.html`, muda a linha `const CACHE = 'casa-v1'` em `sw.js` para `casa-v2`, `casa-v3`, etc. Sem isso o telemóvel continua a servir a versão em cache.
 
+## Contas e poupanças
+
+Cada movimento pertence a uma conta. As contas são de dois tipos:
+
+- **Corrente**: saldo = saldo inicial + movimentos posteriores à data desse saldo.
+- **Poupança**: idem, mais juros calculados **dia a dia**. A taxa que introduzes é anual bruta; a app divide-a por 365 e capitaliza diariamente. O campo de imposto desconta a retenção sobre os juros — Livret A e LDDS são isentos, deixa 0.
+
+Movimentos com data anterior ao saldo inicial da conta não são somados: presume-se que já estão refletidos no valor que introduziste. Movimentos com data futura aparecem no calendário mas não contam para o saldo de hoje.
+
+Passar dinheiro para a poupança é uma **transferência**, não uma despesa: não entra nos totais de saídas do mês.
+
+## Justificações
+
+Despesas acima do limite definido em Contas → Regras exigem uma justificação escrita. O relatório tem uma secção que lista as despesas sem justificação do mês.
+
 ## Limitações conhecidas
 
 - Não há histórico nem anulação: apagado é apagado.
 - Se os dois editarem o mesmo movimento em simultâneo, fica a última edição.
-- Sem categorias personalizáveis (estão no topo do `app.js`, na constante `CATS`).
+- Editar um movimento fixo altera-o em todos os meses, passados incluídos.
+- Uma conta com movimentos não pode ser apagada.
+- As categorias estão fixas no topo do `app.js`, na constante `CATS`.
 - Sem exportação para folha de cálculo.

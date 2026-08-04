@@ -165,3 +165,52 @@ h4{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;te
 .toast{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:60;
   background:var(--ink);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:9.5px;
   letter-spacing:.1em;padding:6px 12px;border-radius:12px;text-transform:uppercase}
+
+/* ============ v2: contas, filtros, edição ============ */
+
+/* barra inferior com 3 separadores + botão flutuante */
+.tabs{gap:0}
+.tab{width:auto;flex:1;padding:12px 4px;font-size:9.5px;letter-spacing:.1em}
+.fab{position:fixed;right:16px;bottom:calc(74px + env(safe-area-inset-bottom));z-index:31;margin-top:0}
+@media(min-width:492px){.fab{right:calc(50% - 214px)}}
+
+/* filtros */
+.fbar{display:flex;gap:14px;margin:2px 0 10px;font-family:'IBM Plex Mono',monospace;
+  font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--soft)}
+.fbar button{text-decoration:underline;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--soft)}
+.fpanel{background:var(--card);border:1px solid var(--grid);border-radius:3px;padding:11px;margin-bottom:10px}
+.frow{margin-bottom:10px}
+.frow .lab{display:block;margin-bottom:5px}
+.chip.sm{padding:4px 9px;font-size:11px}
+
+/* transferências */
+.trdot{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--soft)}
+.sq.t{background:var(--soft)}
+.dot.t{background:var(--soft)}
+.rowamt.t{color:var(--soft)}
+
+/* justificação */
+.note{font-size:11.5px;color:var(--soft);font-style:italic;margin-top:3px;
+  border-left:2px solid var(--grid);padding-left:6px;line-height:1.35}
+.field textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:3px;
+  padding:10px;font-size:16px;font-family:inherit;color:var(--ink);resize:vertical;min-height:52px}
+
+/* linhas clicáveis */
+.row[data-act="open"]{cursor:pointer}
+.row[data-act="open"]:active{background:var(--paper)}
+
+/* segmento de 3 */
+.seg.three{grid-template-columns:1fr 1fr 1fr}
+.seg.three .segb{font-size:12px;padding:9px 2px}
+
+/* contas */
+.acclist{display:flex;flex-direction:column;gap:8px}
+.acccard{background:var(--card);border:1px solid var(--grid);border-radius:3px;padding:12px}
+.acctop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.acctop b{font-size:14.5px;font-weight:600;display:block}
+.acctop .rowmeta{margin-top:3px}
+.accbal{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;letter-spacing:-.02em;flex:none}
+.accjuros{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid var(--grid)}
+.accjuros span{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;display:flex;flex-direction:column;gap:2px}
+.accjuros .lab{font-style:normal}
+.acccard .fixbtns{margin-top:11px}
