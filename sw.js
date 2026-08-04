@@ -1,6 +1,8 @@
-/* Service worker: app shell em cache, rede para o Supabase.
-   Muda CACHE quando editares ficheiros, senão o telemóvel serve a versão antiga. */
-const CACHE = 'casa-v5';
+/* Service worker — estratégia rede-primeiro.
+   Enquanto houver rede, serve sempre a versão mais recente do servidor e
+   guarda cópia. Sem rede, serve a cópia guardada. Assim a app funciona
+   offline sem nunca ficar presa a uma versão antiga. */
+const CACHE = 'casa-v6';
 const SHELL = [
   './', './index.html', './styles.css', './app.js', './config.js',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
@@ -12,10 +14,13 @@ self.addEventListener('install', (e) => {
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(
-    caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+    caches.keys()
+      .then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
+
+self.addEventListener('message', (e) => { if (e.data === 'skip-waiting') self.skipWaiting(); });
 
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
@@ -23,12 +28,11 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== location.origin) return;   // Supabase e fontes vão direto à rede
 
   e.respondWith(
-    caches.match(e.request).then((hit) => {
-      const net = fetch(e.request).then((r) => {
-        if (r.ok) { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, cp)); }
+    fetch(e.request)
+      .then((r) => {
+        if (r && r.ok) { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, cp)); }
         return r;
-      }).catch(() => hit);
-      return hit || net;
-    })
+      })
+      .catch(() => caches.match(e.request).then((hit) => hit || caches.match('./index.html')))
   );
 });

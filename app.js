@@ -18,6 +18,7 @@ const CATS = {
 const WHO = ['Fred', 'Bea', 'Casa'];
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const DOW = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+const APP_VERSION = '2.0';
 const MAXDAYS = 20000;   // limite do cálculo diário de juros
 
 /* ---------- helpers ---------- */
@@ -505,6 +506,11 @@ function viewAcc() {
       </label>
       <p class="hint">Abaixo deste valor a justificação é opcional. Põe 0 para exigir sempre.</p>
       <button class="btn" data-act="save-settings">Guardar</button>
+    </div>
+
+    <div class="verbar">
+      <span>versão ${APP_VERSION}</span>
+      <button data-act="hard-reload">forçar atualização</button>
     </div>`;
 }
 
@@ -834,6 +840,19 @@ document.addEventListener('click', async (e) => {
     }
     case 'logout': saveSession(null); S.sync = 'off'; stopPoll(); paint(); break;
     case 'sync': sync(true); break;
+
+    case 'hard-reload': {
+      toast('a repor…');
+      try {
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((r) => r.unregister()));
+        }
+        if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map((k) => caches.delete(k))); }
+      } catch (err) { /* segue na mesma */ }
+      location.reload(true);
+      break;
+    }
   }
 });
 
@@ -869,4 +888,28 @@ function stopPoll() { if (poll) { clearInterval(poll); poll = null; } }
 loadLocal();
 paint();
 if (CLOUD && S.session) { sync(true); startPoll(); }
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+/* ---------- service worker: procura versões novas e recarrega sozinho ---------- */
+if ('serviceWorker' in navigator) {
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController && !reloading) { reloading = true; location.reload(); }
+  });
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').then((reg) => {
+      reg.update();
+      setInterval(() => reg.update(), 30 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') reg.update();
+      });
+      reg.addEventListener('updatefound', () => {
+        const sw = reg.installing;
+        if (sw) sw.addEventListener('statechange', () => {
+          if (sw.state === 'installed' && navigator.serviceWorker.controller) sw.postMessage('skip-waiting');
+        });
+      });
+    }).catch(() => {});
+  });
+}

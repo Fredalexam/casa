@@ -214,3 +214,8 @@ h4{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;te
 .accjuros span{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;display:flex;flex-direction:column;gap:2px}
 .accjuros .lab{font-style:normal}
 .acccard .fixbtns{margin-top:11px}
+
+/* rodapé de versão */
+.verbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--soft)}
+.verbar button{text-decoration:underline;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--soft)}
