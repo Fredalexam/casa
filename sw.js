@@ -2,7 +2,7 @@
    Enquanto houver rede, serve sempre a versão mais recente do servidor e
    guarda cópia. Sem rede, serve a cópia guardada. Assim a app funciona
    offline sem nunca ficar presa a uma versão antiga. */
-const CACHE = 'casa-v6';
+const CACHE = 'casa-v7';
 const SHELL = [
   './', './index.html', './styles.css', './app.js', './config.js',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
